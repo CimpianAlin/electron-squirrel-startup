@@ -5,25 +5,8 @@ var app = require('electron').app;
 var fs = require('fs');
 var os = require('os');
 
-var desktopLinkExists = function(channel) {
-  var linkName
-  switch (channel) {
-    case 'nightly':
-      linkName = 'BraveNightly'
-      break
-    case 'developer':
-      linkName = 'BraveDeveloper'
-      break
-    case 'beta':
-      linkName = 'BraveBeta'
-      break
-    case 'dev':
-      linkName = 'Brave'
-      break
-    default:
-      linkName = 'Brave'
-  }
-  return fs.existsSync(path.join(os.homedir(), 'desktop', `${linkName}.lnk`))
+var desktopLinkExists = function() {
+  return fs.existsSync(path.join(os.homedir(), 'desktop', 'Brave.lnk'))
 }
 
 var run = function(args, done) {
@@ -34,29 +17,19 @@ var run = function(args, done) {
   }).on('close', done);
 };
 
-var check = function(channel = 'dev') {
+var check = function() {
   if (process.platform === 'win32') {
     var cmd = process.argv[1];
     debug('processing squirrel command `%s`', cmd);
     var target = path.basename(process.execPath);
 
-    let userDataDirArg = '--user-data-dir=brave-' + channel
-
     if (cmd === '--squirrel-install') {
-      if (channel === 'dev') {
-        run(['--createShortcut=' + target + ''], app.quit);
-      } else {
-        run(['--createShortcut=' + target + '', '--process-start-args=' + '--user-data-dir=brave-' + channel], app.quit);
-      }
+      run(['--createShortcut=' + target + ''], app.quit);
       return true;
     }
     if (cmd === '--squirrel-updated') {
-      if (desktopLinkExists(channel)) {
-        if (channel === 'dev') {
-          run(['--createShortcut=' + target + ''], app.quit);
-        } else {
-          run(['--createShortcut=' + target + '', '--process-start-args=' + '--user-data-dir=brave-' + channel], app.quit);
-      }
+      if (desktopLinkExists()) {
+        run(['--createShortcut=' + target + ''], app.quit);
       }
       return true;
     }
@@ -72,4 +45,4 @@ var check = function(channel = 'dev') {
   return false;
 };
 
-module.exports = check;
+module.exports = check();
