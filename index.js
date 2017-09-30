@@ -40,13 +40,13 @@ var check = function(channel = 'dev') {
     debug('processing squirrel command `%s`', cmd);
     var target = path.basename(process.execPath);
 
-    let userDataDirArg = '--user-data-dir=brave-' + channel
+    let userDataDirArg = '--user-data-dir-name=brave-' + channel
 
     if (cmd === '--squirrel-install') {
       if (channel === 'dev') {
         run(['--createShortcut=' + target + ''], app.quit);
       } else {
-        run(['--createShortcut=' + target + '', '--process-start-args=' + '--user-data-dir=brave-' + channel], app.quit);
+        run(['--createShortcut=' + target + '', '--process-start-args=' + '--user-data-dir-name=brave-' + channel], app.quit);
       }
       return true;
     }
@@ -55,7 +55,7 @@ var check = function(channel = 'dev') {
         if (channel === 'dev') {
           run(['--createShortcut=' + target + ''], app.quit);
         } else {
-          run(['--createShortcut=' + target + '', '--process-start-args=' + '--user-data-dir=brave-' + channel], app.quit);
+          run(['--createShortcut=' + target + '', '--process-start-args=' + '--user-data-dir-name=brave-' + channel], app.quit);
       }
       }
       return true;
