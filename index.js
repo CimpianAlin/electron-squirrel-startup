@@ -45,8 +45,10 @@ var check = function(channel = 'dev') {
     if (cmd === '--squirrel-install') {
       if (channel === 'dev') {
         run(['--createShortcut=' + target + ''], app.quit);
+        run(['--createShortcut=' + target + '', '--shortcut-locations=DuplicateDesktop', '--process-start-args=--launch-muon'], app.quit);
       } else {
-        run(['--createShortcut=' + target + '', '--process-start-args=' + '--user-data-dir-name=brave-' + channel], app.quit);
+        run(['--createShortcut=' + target + '', '--process-start-args=' + userDataDirArg], app.quit);
+        run(['--createShortcut=' + target + '', '--shortcut-locations=DuplicateDesktop', '--process-start-args=' + userDataDirArg + ' --launch-muon'], app.quit);
       }
       return true;
     }
@@ -54,14 +56,16 @@ var check = function(channel = 'dev') {
       if (desktopLinkExists(channel)) {
         if (channel === 'dev') {
           run(['--createShortcut=' + target + ''], app.quit);
+          run(['--createShortcut=' + target + '', '--shortcut-locations=DuplicateDesktop', '--process-start-args=--launch-muon'], app.quit);
         } else {
-          run(['--createShortcut=' + target + '', '--process-start-args=' + '--user-data-dir-name=brave-' + channel], app.quit);
+          run(['--createShortcut=' + target + '', '--process-start-args=' + userDataDirArg], app.quit);
+          run(['--createShortcut=' + target + '', '--shortcut-locations=DuplicateDesktop', '--process-start-args=' + userDataDirArg + ' --launch-muon'], app.quit);
       }
       }
       return true;
     }
     if (cmd === '--squirrel-uninstall') {
-      run(['--removeShortcut=' + target + ''], app.quit);
+      run(['--removeShortcut=' + target + '', '--shortcut-locations=Desktop,StartMenu,DuplicateDesktop'], app.quit);
       return true;
     }
     if (cmd === '--squirrel-obsolete') {
